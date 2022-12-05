@@ -1,4 +1,4 @@
-from data.day4 import SAMPLE_TXT, INPUT_TXT
+from data.day04 import SAMPLE_TXT, INPUT_TXT
 from typing import Iterable
 
 

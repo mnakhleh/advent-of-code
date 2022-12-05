@@ -1,4 +1,4 @@
-from data.day2 import SAMPLE_TXT, INPUT_TXT
+from data.day02 import SAMPLE_TXT, INPUT_TXT
 
 OutcomeDict = dict[str, tuple[int, int]]
 

@@ -1,4 +1,4 @@
-from data.day5 import SAMPLE_TXT, INPUT_TXT
+from data.day05 import SAMPLE_TXT, INPUT_TXT
 import re
 from typing import Callable
 

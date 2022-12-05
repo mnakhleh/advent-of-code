@@ -1,4 +1,4 @@
-from data.day3 import SAMPLE_TXT, INPUT_TXT
+from data.day03 import SAMPLE_TXT, INPUT_TXT
 
 
 def part1(txt: str) -> int:

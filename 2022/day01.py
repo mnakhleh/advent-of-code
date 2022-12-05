@@ -7,7 +7,7 @@
 """
 import heapq
 
-from data.day1 import SAMPLE_TXT, INPUT_TXT
+from data.day01 import SAMPLE_TXT, INPUT_TXT
 
 
 def part1_forloop(txt: str) -> int:
