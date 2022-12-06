@@ -30,7 +30,7 @@ def parse_instruction(line: str) -> list[int]:
 
 
 def parse_boxconfig(box_string: str) -> BoxConfig:
-    string_as_list = [line for line in box_string.split('\n')][:-1]
+    string_as_list = [line for line in box_string.splitlines()][:-1]
     boxes_as_list = list(zip(*string_as_list))[1::4]
     return [remove_empty_and_reverse(list(column)) for column in boxes_as_list]
 
