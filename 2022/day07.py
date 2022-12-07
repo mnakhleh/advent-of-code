@@ -7,12 +7,30 @@ TOTAL_SPACE = 70_000_000
 NEEDED_SPACE = 30_000_000
 
 
+def part1(txt: str) -> int:
+    root = get_file_tree(txt)
+    return sum(len(dr) for dr in get_small_dirs(root, 100000))
+
+
+def part2(txt: str) -> int:
+    root = get_file_tree(txt)
+    space_to_free = abs(TOTAL_SPACE - NEEDED_SPACE - len(root))
+
+    all_dirs = [len(node) for node in LevelOrderIter(root) if node.typ == 'dir']
+    for size in sorted(all_dirs):
+        if size >= space_to_free:
+            return size
+
+
 class SizeNode(Node):
     size: int
     typ: str
 
     def __len__(self) -> int:
-        total_size = self.size if self.typ == 'file' else 0
+        if self.typ == 'file':
+            return self.size
+
+        total_size = 0
         for child in self.children:
             if child.typ == 'file':
                 total_size += child.size
@@ -54,21 +72,6 @@ def get_small_dirs(node: SizeNode, threshhold: int) -> Iterator[SizeNode]:
     for node in LevelOrderIter(node):
         if node.typ == 'dir' and len(node) <= threshhold:
             yield node
-
-
-def part1(txt: str) -> int:
-    root = get_file_tree(txt)
-    return sum(len(dr) for dr in get_small_dirs(root, 100000))
-
-
-def part2(txt: str) -> int:
-    root = get_file_tree(txt)
-    space_to_free = abs(TOTAL_SPACE - NEEDED_SPACE - len(root))
-
-    all_dirs = [len(node) for node in LevelOrderIter(root) if node.typ == 'dir']
-    for size in sorted(all_dirs):
-        if size >= space_to_free:
-            return size
 
 
 ##########################
