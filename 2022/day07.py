@@ -8,28 +8,25 @@ NEEDED_SPACE = 30_000_000
 
 def part1(txt: str) -> int:
     root = get_file_tree(txt)
-    return sum(size(node) for node in LevelOrderIter(root) if size(node) <= 100000)
+    return sum(get_size(node) for node in LevelOrderIter(root) if get_size(node) <= 100000)
 
 
 def part2(txt: str) -> int:
     root = get_file_tree(txt)
-    space_to_free = abs(TOTAL_SPACE - NEEDED_SPACE - size(root))
-
-    dir_sizes = [size(node) for node in LevelOrderIter(root)]
-
-    # Taken from bucketz76. Love it
+    space_to_free = abs(TOTAL_SPACE - NEEDED_SPACE - get_size(root))
+    dir_sizes = [get_size(node) for node in LevelOrderIter(root)]
     return min(size for size in dir_sizes if size >= space_to_free)
 
 
-def size(node: Node) -> int:
-    return node.size + sum(size(child) for child in node.children)
+def get_size(node: Node) -> int:
+    return node.size + sum(get_size(child) for child in node.children)
 
 
 def get_file_tree(txt: str) -> Node:
+    # Took from bucketz76 the approach of just accumulating file sizes in dirs directly. Love it
     root = Node('root', size=0)
     cur_node = root
-    commands = txt.splitlines()[1:]
-    for i, command in enumerate(commands):
+    for i, command in enumerate(txt.splitlines()[1:]):
         if command == '$ cd ..':
             cur_node = cur_node.parent
         elif command == '$ cd /':
@@ -37,9 +34,7 @@ def get_file_tree(txt: str) -> Node:
         elif command.startswith('$ cd'):
             new_node = Node(command[5:], size=0, parent=cur_node)
             cur_node = new_node
-        elif command == '$ ls':
-            continue
-        elif command.startswith('dir'):
+        elif command.startswith(('$ ls', 'dir')):
             continue
         else:  # File size
             file_size = int(command.split(' ')[0])
