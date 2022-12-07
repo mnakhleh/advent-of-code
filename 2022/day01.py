@@ -36,7 +36,7 @@ def get_sorted_calories(txt: str) -> list[int]:
 
 
 def calories_from_string(elf_calories: str) -> int:
-    return sum(int(number) for number in elf_calories.split('\n'))
+    return sum(int(number) for number in elf_calories.splitlines())
 
 
 def part1_sorted(txt: str) -> int:

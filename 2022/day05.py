@@ -1,59 +1,52 @@
 from data.day05 import SAMPLE_TXT, INPUT_TXT
 import re
-from typing import Callable
+from typing import Callable, Iterator
 
-BoxColumn = list[str]
-BoxConfig = list[BoxColumn]
-Instructions = list[list[int]]
+Stack = list[str]
+AllStacks = list[Stack]
+Instructions = Iterator[list[int]]
 
 
 def part1(txt: str) -> str:
-    box_config, instructions = parse_input(txt)
-    return get_last_letters(move_boxes(box_config, instructions, box_func=order_boxes_pt1))
+    stacks, instructions = parse_input(txt)
+    return get_last_letters(move_boxes(stacks, instructions, box_func=order_boxes_pt1))
 
 
 def part2(txt: str) -> str:
-    box_config, instructions = parse_input(txt)
-    return get_last_letters(move_boxes(box_config, instructions, box_func=order_boxes_pt2))
+    stacks, instructions = parse_input(txt)
+    return get_last_letters(move_boxes(stacks, instructions, box_func=order_boxes_pt2))
 
 
-def parse_input(txt: str) -> [BoxConfig, Instructions]:
-    box_string, instructions_string = txt.split('\n\n')
-    instructions = [parse_instruction(line) for line in instructions_string.split('\n')]
-    box_config = parse_boxconfig(box_string)
-    return box_config, instructions
+def parse_input(txt: str) -> [AllStacks, Instructions]:
+    stacks_raw, instructions_raw = txt.split('\n\n')
+    return parse_stacks(stacks_raw), parse_instructions(instructions_raw)
 
 
-def parse_instruction(line: str) -> list[int]:
-    instructions = re.match(r'move (\d*) from (\d*) to (\d)', line).groups()
-    return [int(line) for line in instructions]
+def parse_instructions(raw: str) -> Instructions:
+    for instruction in re.findall(r'move (\d*) from (\d*) to (\d)', raw):
+        yield [int(number) for number in instruction]
 
 
-def parse_boxconfig(box_string: str) -> BoxConfig:
-    string_as_list = [line for line in box_string.splitlines()][:-1]
-    boxes_as_list = list(zip(*string_as_list))[1::4]
-    return [remove_empty_and_reverse(list(column)) for column in boxes_as_list]
+def parse_stacks(raw: str) -> AllStacks:
+    stacks_as_strings = list(zip(*raw.splitlines()))[1::4]
+    return [[val for val in reversed(column) if val != ' '] for column in stacks_as_strings]
 
 
-def get_last_letters(box_config: BoxConfig) -> str:
+def get_last_letters(box_config: AllStacks) -> str:
     return ''.join(column[-1] for column in box_config)
 
 
-def remove_empty_and_reverse(column: BoxColumn) -> BoxColumn:
-    return [val for val in reversed(column) if val != ' ']
-
-
-def order_boxes_pt1(column: BoxColumn, qty: int) -> [BoxColumn, BoxColumn]:
+def order_boxes_pt1(column: Stack, qty: int) -> [Stack, Stack]:
     boxes = [column.pop() for _ in range(qty)]
     return column, boxes
 
 
-def order_boxes_pt2(column: BoxColumn, qty: int) -> [BoxColumn, BoxColumn]:
+def order_boxes_pt2(column: Stack, qty: int) -> [Stack, Stack]:
     boxes = [column.pop() for _ in range(qty)]
     return column, boxes[::-1]
 
 
-def move_boxes(box_config: BoxConfig, instructions: Instructions, box_func: Callable):
+def move_boxes(box_config: AllStacks, instructions: Instructions, box_func: Callable):
     for qty, start, end in instructions:
         column = box_config[start-1]
         new_column, boxes = box_func(column, qty)

@@ -1,13 +1,14 @@
 from data.day03 import SAMPLE_TXT, INPUT_TXT
+from string import ascii_lowercase, ascii_uppercase
 
 
 def part1(txt: str) -> int:
-    overlaps = [get_common_item(line) for line in txt.split('\n')]
+    overlaps = [get_common_item(line) for line in txt.splitlines()]
     return calculate_total_value(overlaps)
 
 
 def part2(txt: str) -> int:
-    overlaps = [set.intersection(*elf_group).pop() for elf_group in get_threebies(txt.split('\n'))]
+    overlaps = [set.intersection(*elf_group).pop() for elf_group in get_threebies(txt.splitlines())]
     return calculate_total_value(overlaps)
 
 
@@ -27,7 +28,9 @@ def calculate_total_value(overlaps: list[str]) -> int:
 
 
 def get_priority(char: str) -> int:
-    return ord(char) - 96 if char.islower() else ord(char) - 38
+    # Neat Trick from Joel Grus
+    return (ascii_lowercase + ascii_uppercase).index(char) + 1
+    # return ord(char) - 96 if char.islower() else ord(char) - 38
 
 
 ##########################

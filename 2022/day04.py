@@ -6,6 +6,8 @@ ElfRange = set[int]
 
 
 def part1(txt: str) -> int:
+    # Clever trick from Joel Grus (though can't extend to p2 and not as legible IMO) - can sum bools
+    # return sum(elf1.issubset(elf2) or elf2.issubset(elf1) for elf1, elf2 in get_elf_sets(txt))
     return sum(1 for elf1, elf2 in get_elf_sets(txt)
                if elf1.issubset(elf2) or elf2.issubset(elf1))
 
@@ -16,7 +18,7 @@ def part2(txt: str) -> int:
 
 
 def get_elf_sets(txt: str) -> Iterable[list[ElfRange]]:
-    for line in txt.split('\n'):
+    for line in txt.splitlines():
         yield [range_set(elf) for elf in line.split(',')]
 
 
