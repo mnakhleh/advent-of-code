@@ -1,6 +1,5 @@
-import itertools
 import functools
-from contextlib import suppress
+import itertools
 import json
 from typing import Union
 
@@ -33,24 +32,23 @@ def are_ordered(a: Union[list, int], b: Union[list, int]) -> int:
         elif char2 is None:
             return -1
         elif (type(char1), type(char2)) == (list, list):
-            with suppress(EqualOrder):
-                return are_ordered(char1, char2)
+            order = are_ordered(char1, char2)
+            if order != 0:
+                return order
         elif (type(char1), type(char2)) == (int, list):
-            with suppress(EqualOrder):
-                return are_ordered([char1], char2)
+            order = are_ordered([char1], char2)
+            if order != 0:
+                return order
         elif (type(char1), type(char2)) == (list, int):
-            with suppress(EqualOrder):
-                return are_ordered(char1, [char2])
+            order = are_ordered(char1, [char2])
+            if order != 0:
+                return order
         elif (type(char1), type(char2)) == (int, int):
             if char1 < char2:
                 return 1
             if char1 > char2:
                 return -1
-    raise EqualOrder
-
-
-class EqualOrder(Exception):
-    """For situations where values are equal, to circumvent returning value"""
+    return 0
 
 
 ##########################
