@@ -1,9 +1,10 @@
-from data.day10 import SAMPLE_TXT, INPUT_TXT
 from typing import Iterable
+
+from data.day10 import SAMPLE_TXT, INPUT_TXT
 
 
 def part1(raw: str) -> int:
-    return sum(get_power(raw, cycle)*cycle for cycle in range(20, 221, 40))
+    return sum(get_power(raw, cycle) * cycle for cycle in range(20, 221, 40))
 
 
 def part2(raw: str) -> Iterable[str]:
@@ -12,7 +13,7 @@ def part2(raw: str) -> Iterable[str]:
     while True:
         power = get_power(raw, i)
         try:
-            screen += '█' if len(screen) % 40 in (power-1, power, power+1) else '.'
+            screen += '█' if len(screen) % 40 in (power - 1, power, power + 1) else '.'
         except TypeError:
             break
 
@@ -45,4 +46,3 @@ if __name__ == '__main__':
     print('\n'.join(part2(SAMPLE_TXT)))
     print('\n\n')
     print('\n'.join(part2(INPUT_TXT)))
-

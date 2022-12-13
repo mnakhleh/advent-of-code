@@ -26,7 +26,7 @@ def get_file_tree(txt: str) -> Node:
     # Took from bucketz76 the approach of just accumulating file sizes in dirs directly. Love it
     root = Node('root', size=0)
     cur_node = root
-    for i, command in enumerate(txt.splitlines()[1:]):
+    for command in txt.splitlines()[1:]:
         if command == '$ cd ..':
             cur_node = cur_node.parent
         elif command == '$ cd /':

@@ -24,13 +24,8 @@ def get_threebies(lines: list[str]) -> list[set[str]]:
 
 
 def calculate_total_value(overlaps: list[str]) -> int:
-    return sum(get_priority(overlap) for overlap in overlaps)
-
-
-def get_priority(char: str) -> int:
-    # Neat Trick from Joel Grus
-    return (ascii_lowercase + ascii_uppercase).index(char) + 1
-    # return ord(char) - 96 if char.islower() else ord(char) - 38
+    priority_map = (ascii_lowercase + ascii_uppercase)  # Neat Trick from Joel Grus
+    return sum(1 + priority_map.index(overlap) for overlap in overlaps)
 
 
 ##########################

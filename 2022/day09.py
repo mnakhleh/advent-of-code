@@ -65,7 +65,7 @@ def run_snake(snake: Snake, instructions: list[list[str]]) -> int:
 ##########################
 if __name__ == '__main__':
     assert part1(SAMPLE_TXT) == 13
-    assert part1(INPUT_TXT) == 6090
+    print(part1(INPUT_TXT))
     assert part2(SAMPLE_TXT) == 1
     assert part2(SAMPLE2_TXT) == 36
     print(part2(INPUT_TXT))
