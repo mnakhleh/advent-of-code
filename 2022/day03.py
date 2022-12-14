@@ -1,9 +1,9 @@
 from data.day03 import SAMPLE_TXT, INPUT_TXT
-from string import ascii_lowercase, ascii_uppercase
+from string import ascii_letters
 
 
 def part1(txt: str) -> int:
-    overlaps = [get_common_item(line) for line in txt.splitlines()]
+    overlaps = [get_common_items(line).pop() for line in txt.splitlines()]
     return calculate_total_value(overlaps)
 
 
@@ -12,10 +12,10 @@ def part2(txt: str) -> int:
     return calculate_total_value(overlaps)
 
 
-def get_common_item(content: str) -> str:
+def get_common_items(content: str) -> set[str]:
     half1, half2 = content[:len(content)//2], content[len(content)//2:]
     overlaps = set(half1) & set(half2)
-    return overlaps.pop()
+    return overlaps
 
 
 def get_threebies(lines: list[str]) -> list[set[str]]:
@@ -24,8 +24,7 @@ def get_threebies(lines: list[str]) -> list[set[str]]:
 
 
 def calculate_total_value(overlaps: list[str]) -> int:
-    priority_map = (ascii_lowercase + ascii_uppercase)  # Neat Trick from Joel Grus
-    return sum(1 + priority_map.index(overlap) for overlap in overlaps)
+    return sum(1 + ascii_letters.index(overlap) for overlap in overlaps) # Neat Trick from Joel Grus + LiquidFun
 
 
 ##########################
