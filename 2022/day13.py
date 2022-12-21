@@ -1,53 +1,53 @@
-import functools
 import itertools
 import json
-from typing import Union
 
 from data.day13 import SAMPLE_TXT, INPUT_TXT
 
 
 def part1(raw: str) -> int:
     return sum(i for i, pair_of_lines in enumerate(raw.split('\n\n'), 1)
-               if are_ordered_raw(pair_of_lines.splitlines()) == 1)
+               if are_ordered_raw(pair_of_lines.splitlines()))
 
 
 def part2(raw: str) -> int:
-    divider_packets = [[[2]], [[6]]]
+    """Can shorten code (and reduce iterations) significantly by running pair_order() against packets, instead of
+    inserting into list then sorting the entire list
+    """
     expressions = [json.loads(expression) for expression in raw.replace('\n\n', '\n').splitlines()]
-    expressions.extend(divider_packets)
-    expressions.sort(key=functools.cmp_to_key(are_ordered), reverse=True)
-    expressions.insert(0, 0)  # To get indices to start at 1 and not 0
-    return expressions.index(divider_packets[0]) * expressions.index(divider_packets[1])
+    packet_indices = [sum(1 for expression in expressions if pair_order(expression, divider_packet) == 1)
+                      for divider_packet in ([[2]], [[6]])]
+    return (packet_indices[0] + 1) * (packet_indices[1] + 2)  # Index starting at 1 + 1st packet offset
 
 
-def are_ordered_raw(expression_pairs: list[str]) -> int:
+def are_ordered_raw(expression_pairs: list[str]) -> bool:
     expressions = map(json.loads, expression_pairs)
-    return are_ordered(*expressions)
+    return pair_order(*expressions) in (0, 1)
 
 
-def are_ordered(a: Union[list, int], b: Union[list, int]) -> int:
+def pair_order(a: list | int, b: list | int) -> int:
     for char1, char2 in itertools.zip_longest(a, b):
         if char1 is None:
             return 1
-        elif char2 is None:
+        if char2 is None:
             return -1
-        elif (type(char1), type(char2)) == (list, list):
-            order = are_ordered(char1, char2)
-            if order != 0:
-                return order
-        elif (type(char1), type(char2)) == (int, list):
-            order = are_ordered([char1], char2)
-            if order != 0:
-                return order
-        elif (type(char1), type(char2)) == (list, int):
-            order = are_ordered(char1, [char2])
-            if order != 0:
-                return order
-        elif (type(char1), type(char2)) == (int, int):
-            if char1 < char2:
-                return 1
-            if char1 > char2:
-                return -1
+        match (char1, char2):
+            case list(), list():
+                order = pair_order(char1, char2)
+                if order != 0:
+                    return order
+            case int(), list():
+                order = pair_order([char1], char2)
+                if order != 0:
+                    return order
+            case list(), int():
+                order = pair_order(char1, [char2])
+                if order != 0:
+                    return order
+            case int(), int():
+                if char1 < char2:
+                    return 1
+                if char1 > char2:
+                    return -1
     return 0
 
 

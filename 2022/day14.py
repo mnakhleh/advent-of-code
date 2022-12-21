@@ -4,7 +4,7 @@ from typing import Iterable
 from data.day14 import SAMPLE_TXT, INPUT_TXT
 
 
-@dataclass
+@dataclass(frozen=True)
 class Point:
     x: int
     y: int
@@ -15,11 +15,10 @@ class Point:
     def __sub__(self, other: 'Point'):
         return Point(self.x - other.x, self.y - other.y)
 
-    def __hash__(self):
-        return hash((self.x, self.y))
-
 
 Formation = dict[Point, bool]
+
+STARTING_POINT = Point(500, 0)
 
 
 def part1(raw: str) -> int:
@@ -55,7 +54,7 @@ def simulate_sand(formation: Formation) -> int:
     turns = 0
     while True:
         new_formation = simulate_turn(formation)
-        if new_formation == formation or Point(500, 0) in new_formation:
+        if new_formation == formation or STARTING_POINT in new_formation:  # Pt1 win condtn || Pt win condtn
             return turns
         formation = new_formation
         turns += 1
@@ -63,7 +62,7 @@ def simulate_sand(formation: Formation) -> int:
 
 def simulate_turn(formation: Formation) -> Formation:
     bottom = max(point.y for point in formation)
-    sand = Point(500, 0)
+    sand = STARTING_POINT
     formation = dict(formation)
     while True:
         if (sand + Point(0, 1)).y > bottom:
